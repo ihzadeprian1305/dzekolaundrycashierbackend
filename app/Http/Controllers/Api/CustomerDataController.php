@@ -61,7 +61,7 @@ class CustomerDataController extends Controller
 
             $validatedData = Validator::make($request->all(), [
                 'name' => 'required|string|min:2|max:255',
-                'phone_number' => 'required|min:10|max:16|unique:customers',
+                'phone_number' => 'required|min:10|max:16|unique:customers,phone_number,null,id,deleted_at,null',
             ]);
     
             if ($validatedData->fails()) {
@@ -111,7 +111,7 @@ class CustomerDataController extends Controller
             $validatedData = Validator::make($request->all(), [
                 'id' => 'required|string|max:255',
                 'name' => 'required|string|min:2|max:255',
-                'phone_number' => 'required|min:10|max:16|unique:customers,phone_number,'.$request->id,
+                'phone_number' => 'required|min:10|max:16|unique:customers,phone_number,'.$request->id.',id,deleted_at,null',
             ]);
     
             if ($validatedData->fails()) {
