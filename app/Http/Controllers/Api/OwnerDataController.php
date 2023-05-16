@@ -148,7 +148,7 @@ class OwnerDataController extends Controller
             if($request->file('profile_image') && $request->delete_image == 'false'){
                 $validatedData = Validator::make($request->all(), [
                     'name' => 'required|string|min:2|max:255',
-                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('users.user_data', 'phone_number')->ignore($userDatumID->user_datum_id)->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('users.user_data', 'phone_number')->ignore($userDatumID->user_datum_id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                     'address' => 'required|string|min:4|max:512',
                     'profile_image' => 'image|file|max:2048',
                     'email' => ['required','max:255','email:dns',Rule::unique('users', 'email')->ignore($request->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
