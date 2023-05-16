@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\UserDatum;
 use App\Models\UserLevel;
 use Exception;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -70,8 +71,8 @@ class OwnerDataController extends Controller
                 'phone_number' => 'required|string|min:10|max:16',
                 'address' => 'required|string|min:4|max:512',
                 'profile_image' => 'image|file|max:2048',
-                'email' => 'required|max:255|unique:users',
-                'username' => 'required|min:8|max:255|unique:users',
+                'email' => ['required','max:255','email:dns',Rule::unique('users', 'email')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                'username' => ['required','min:8','max:255',Rule::unique('users', 'username')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                 'password' => 'min:8|required_with:password_confirmation|same:password_confirmation',
                 'password_confirmation' => 'min:8',
             ]);
@@ -148,8 +149,8 @@ class OwnerDataController extends Controller
                     'phone_number' => 'required|string|min:10|max:16',
                     'address' => 'required|string|min:4|max:512',
                     'profile_image' => 'image|file|max:2048',
-                    'email' => 'required|max:255|unique:users,email,'.$request->id,
-                    'username' => 'required|min:8|max:255|unique:users,username,'.$request->id,
+                    'email' => ['required','max:255','email:dns',Rule::unique('users', 'email')->ignore($request->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    'username' => ['required','min:8','max:255',Rule::unique('users', 'username')->ignore($request->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                     'password' => 'nullable|min:8|required_with:password_confirmation|same:password_confirmation',
                     'password_confirmation' => 'nullable|min:8',
                 ]);
@@ -207,8 +208,8 @@ class OwnerDataController extends Controller
                     'name' => 'required|string|min:2|max:255',
                     'phone_number' => 'required|string|min:10|max:16',
                     'address' => 'required|string|min:4|max:512',
-                    'email' => 'required|max:255|unique:users,email,'.$request->id,
-                    'username' => 'required|min:8|max:255|unique:users,username,'.$request->id,
+                    'email' => ['required','max:255','email:dns',Rule::unique('users', 'email')->ignore($request->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    'username' => ['required','min:8','max:255',Rule::unique('users', 'username')->ignore($request->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                     'password' => 'nullable|min:8|required_with:password_confirmation|same:password_confirmation',
                     'password_confirmation' => 'nullable|min:8',
                 ]);

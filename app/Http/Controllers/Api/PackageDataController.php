@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Package;
 use Exception;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class PackageDataController extends Controller
 {
@@ -60,7 +62,7 @@ class PackageDataController extends Controller
             }
 
             $validatedData = Validator::make($request->all(), [
-                'name' => 'required|string|min:2|max:255|unique:packages,name,null,null,deleted_at,null',
+                'name' => ['required','string','min:2','max:255',Rule::unique('packages', 'name')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                 'price' => 'required|min:3|max:8',
                 'type' => 'required|in:Kiloan,Potongan',
             ]);
@@ -112,7 +114,7 @@ class PackageDataController extends Controller
 
             $validatedData = Validator::make($request->all(), [
                 'id' => 'required|string|max:255',
-                'name' => 'required|string|min:2|max:255|unique:packages,name,'.$request->id.',id,deleted_at,null',
+                'name' => ['required','string','min:2','max:255',Rule::unique('packages', 'name')->ignore($request->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                 'price' => 'required|min:3|max:8',
                 'type' => 'required|in:Kiloan,Potongan',
             ]);

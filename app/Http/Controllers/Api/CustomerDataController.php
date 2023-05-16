@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use Exception;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class CustomerDataController extends Controller
 {
@@ -61,7 +63,7 @@ class CustomerDataController extends Controller
 
             $validatedData = Validator::make($request->all(), [
                 'name' => 'required|string|min:2|max:255',
-                'phone_number' => 'required|min:10|max:16|unique:customers,phone_number,null,id,deleted_at,null',
+                'phone_number' => ['required','min:10','max:16',Rule::unique('customers', 'phone_number')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
             ]);
     
             if ($validatedData->fails()) {
@@ -111,7 +113,7 @@ class CustomerDataController extends Controller
             $validatedData = Validator::make($request->all(), [
                 'id' => 'required|string|max:255',
                 'name' => 'required|string|min:2|max:255',
-                'phone_number' => 'required|min:10|max:16|unique:customers,phone_number,'.$request->id.',id,deleted_at,null',
+                'phone_number' => ['required','min:10','max:16',Rule::unique('customers', 'phone_number')->ignore($request->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
             ]);
     
             if ($validatedData->fails()) {

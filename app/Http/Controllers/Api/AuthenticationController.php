@@ -6,12 +6,14 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserDatum;
 use Exception;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class AuthenticationController extends Controller
 {
@@ -27,8 +29,8 @@ class AuthenticationController extends Controller
 
             $validatedData = Validator::make($request->all(), [
                 'name' => 'required|string|min:2|max:255',
-                'username' => 'required|string|min:8|max:255|unique:users',
-                'email' => 'required|string|email:dns|max:255|unique:users',
+                'email' => ['required','string','email:dns','max:255',Rule::unique('users', 'email')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                'username' => ['required','string','min:8','max:255',Rule::unique('users', 'username')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                 'phone_number' => 'required|string|min:10|max:16',
                 'address' => 'required|string|min:4|max:512',
                 'password' => 'required|string|min:8|max:255',
@@ -337,8 +339,8 @@ class AuthenticationController extends Controller
             }
     
             $validatedData = Validator::make($request->all(), [
-                'email' => 'required|max:255|email:dns|unique:users,email,'.$request->user()->id,
-                'username' => 'required|min:8|max:255|unique:users,username,'.$request->user()->id,
+                'email' => ['required','max:255','email:dns',Rule::unique('users', 'email')->ignore($request->user()->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                'username' => ['required','min:8','max:255',Rule::unique('users', 'username')->ignore($request->user()->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                 'old_password' => 'nullable|min:8|required_with:new_password|same:new_password',
                 'new_password' => 'nullable|min:8|required_with:password_confirmation|same:password_confirmation',
                 'password_confirmation' => 'nullable|min:8',
