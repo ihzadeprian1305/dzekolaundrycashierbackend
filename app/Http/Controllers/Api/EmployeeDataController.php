@@ -143,12 +143,12 @@ class EmployeeDataController extends Controller
                 ], 401);
             }
 
-            $userDatumID = User::select('user_datum_id')->where('id', $request->id)->first();
+            $userDatumID = User::where('id', $request->id)->first();
 
             if($request->file('profile_image') && $request->delete_image == 'false'){
                 $validatedData = Validator::make($request->all(), [
                     'name' => 'required|string|min:2|max:255',
-                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID->user_datum_id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                     'address' => 'required|string|min:4|max:512',
                     'profile_image' => 'nullable|sometimes|image|file|max:2048',
                     'email' => ['required','max:255','email:dns',Rule::unique('users', 'email')->ignore($request->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
@@ -181,7 +181,7 @@ class EmployeeDataController extends Controller
             }else if(empty($request->file('profile_image')) && $request->delete_image == 'true'){
                 $validatedData = Validator::make($request->all(), [
                     'name' => 'required|string|min:2|max:255',
-                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID->user_datum_id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                     'address' => 'required|string|min:4|max:512',
                 ]);
         
@@ -208,7 +208,7 @@ class EmployeeDataController extends Controller
             }else{
                 $validatedData = Validator::make($request->all(), [
                     'name' => 'required|string|min:2|max:255',
-                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID->user_datum_id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                     'address' => 'required|string|min:4|max:512',
                     'email' => ['required','max:255','email:dns',Rule::unique('users', 'email')->ignore($request->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                     'username' => ['required','min:8','max:255',Rule::unique('users', 'username')->ignore($request->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
