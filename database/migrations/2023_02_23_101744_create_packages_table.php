@@ -16,7 +16,7 @@ return new class extends Migration
     {
         Schema::create('packages', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name', 255)->unique();
+            $table->string('name', 255);
             $table->float('price');
             $table->enum('type', ['Kiloan', 'Potongan']);
             $table->timestamps();

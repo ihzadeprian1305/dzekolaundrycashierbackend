@@ -15,9 +15,9 @@ return new class extends Migration
     {
         Schema::create('stuffs', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('name', 255)->unique();
+            $table->string('name', 255);
             $table->float('price');
-            $table->enum('type', ['Kilogram', 'Buah', 'Potong', 'Botol', 'Set', 'Liter', 'Rol', 'Kotak', 'Lembar', 'Pak']);
+            $table->enum('type', ['Kilogram', 'Buah', 'Potong', 'Botol', 'Set', 'Liter', 'Rol', 'Kotak', 'Lembar', 'Pak', 'Bungkus']);
             $table->timestamps();
             $table->softDeletes();
         });
