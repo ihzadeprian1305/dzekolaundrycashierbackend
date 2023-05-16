@@ -341,7 +341,7 @@ class AuthenticationController extends Controller
             $validatedData = Validator::make($request->all(), [
                 'email' => ['required','max:255','email:dns',Rule::unique('users', 'email')->ignore($request->user()->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                 'username' => ['required','min:8','max:255',Rule::unique('users', 'username')->ignore($request->user()->id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
-                'old_password' => 'nullable|min:8|required_with:new_password|same:new_password',
+                'old_password' => 'nullable|min:8|required_with:new_password',
                 'new_password' => 'nullable|min:8|required_with:password_confirmation|same:password_confirmation',
                 'password_confirmation' => 'nullable|min:8',
             ]);

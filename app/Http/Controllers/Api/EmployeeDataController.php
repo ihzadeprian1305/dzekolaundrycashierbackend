@@ -72,7 +72,7 @@ class EmployeeDataController extends Controller
                 'address' => 'required|string|min:4|max:512',
                 'profile_image' => 'image|file|max:2048',
                 'email' => ['required','max:255','email:dns',Rule::unique('users', 'email')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
-                    'username' => ['required','min:8','max:255',Rule::unique('users', 'username')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                'username' => ['required','min:8','max:255',Rule::unique('users', 'username')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
                 'password' => 'min:8|required_with:password_confirmation|same:password_confirmation',
                 'password_confirmation' => 'min:8',
             ]);
