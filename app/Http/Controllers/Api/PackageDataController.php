@@ -60,7 +60,7 @@ class PackageDataController extends Controller
             }
 
             $validatedData = Validator::make($request->all(), [
-                'name' => 'required|string|min:2|max:255|unique:packages,name,null,id,deleted_at,null',
+                'name' => 'required|string|min:2|max:255|unique:packages,name,null,null,deleted_at,null',
                 'price' => 'required|min:3|max:8',
                 'type' => 'required|in:Kiloan,Potongan',
             ]);
