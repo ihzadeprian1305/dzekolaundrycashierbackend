@@ -143,7 +143,7 @@ class OwnerDataController extends Controller
                 ], 401);
             }
 
-            $userDatumID = User::select('user_datum_id')->first();
+            $userDatumID = User::select('user_datum_id')->where('id', $request->id)->first();
 
             if($request->file('profile_image') && $request->delete_image == 'false'){
                 $validatedData = Validator::make($request->all(), [
