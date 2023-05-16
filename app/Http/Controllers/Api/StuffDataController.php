@@ -60,7 +60,7 @@ class StuffDataController extends Controller
             }
 
             $validatedData = Validator::make($request->all(), [
-                'name' => 'required|string|min:2|max:255|unique:stuffs,name,null,name,deleted_at,null',
+                'name' => 'required|string|min:2|max:255|unique:stuffs,name,null,id,deleted_at,null,name,'.$request->name,
                 'price' => 'required|min:3|max:8',
                 'type' => 'required|in:Kilogram,Buah,Potong,Botol,Set,Liter,Rol,Kotak,Lembar,Pak',
             ]);
