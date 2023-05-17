@@ -223,7 +223,8 @@ class AuthenticationController extends Controller
             if($request->file('profile_image') && $request->delete_image == 'false'){
                 $validatedData = Validator::make($request->all(), [
                     'name' => 'required|string|min:2|max:255',
-                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID->user_datum_id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    // 'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID->user_datum_id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    'phone_number' => 'required|string|min:10|max:16',
                     'address' => 'required|string|min:4|max:512',
                     'profile_image' => 'image|file|max:2048',
                 ]);
@@ -252,7 +253,8 @@ class AuthenticationController extends Controller
             }else if(empty($request->file('profile_image')) && $request->delete_image == 'true'){
                 $validatedData = Validator::make($request->all(), [
                     'name' => 'required|string|min:2|max:255',
-                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID->user_datum_id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    // 'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID->user_datum_id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    'phone_number' => 'required|string|min:10|max:16',
                     'address' => 'required|string|min:4|max:512',
                 ]);
         
@@ -280,7 +282,8 @@ class AuthenticationController extends Controller
             }else{
                 $validatedData = Validator::make($request->all(), [
                     'name' => 'required|string|min:2|max:255',
-                    'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID->user_datum_id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    // 'phone_number' => ['required','string','min:10','max:16',Rule::unique('user_data', 'phone_number')->ignore($userDatumID->user_datum_id, 'id')->where(fn (Builder $query) => $query->where('deleted_at', null,))],
+                    'phone_number' => 'required|string|min:10|max:16',
                     'address' => 'required|string|min:4|max:512',
                 ]);
         
