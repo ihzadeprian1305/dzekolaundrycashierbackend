@@ -19,7 +19,7 @@ class OwnerDataController extends Controller
     public function fetch(Request $request)
     {
         try {
-            if ($request->except('search')) {
+            if ($request->except(['skip', 'take', 'search'])) {
                 return response()->json([
                     'status' => 401,
                     'success' => false,
@@ -38,7 +38,7 @@ class OwnerDataController extends Controller
                 'success' => true,
                 'message' => 'Data Pemilik telah Berhasil Didapat',
                 'data' => $ownerUser->orderBy(UserDatum::select('name')
-                ->whereColumn('user_data.id', 'users.user_datum_id'))->get(),
+                ->whereColumn('user_data.id', 'users.user_datum_id'))->get()->skip($request->skip)->take($request->take)->values(),
             ], 200);
         } catch(QueryException $error){
             return response()->json([
