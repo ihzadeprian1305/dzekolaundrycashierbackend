@@ -20,7 +20,7 @@ class TransactionController extends Controller
 {
     public function fetch(Request $request){
         try{
-            if ($request->except(['limit', 'status', 'search', 'latest'])) {
+            if ($request->except(['offset', 'limit', 'status', 'search', 'latest'])) {
                 return response()->json([
                     'status' => 401,
                     'success' => false,
@@ -30,6 +30,9 @@ class TransactionController extends Controller
 
             $transaction = Transaction::with('transaction_items.packages', 'customers', 'created_by', 'updated_by');
             
+            if($request->offset){
+                $transaction->offset($request->offset);
+            }
             if($request->limit){
                 $transaction->limit($request->limit);
             }

@@ -15,7 +15,7 @@ class CustomerDataController extends Controller
 {
     public function fetch(Request $request){
         try{
-            if ($request->except('search')) {
+            if ($request->except(['skip', 'take', 'search'])) {
                 return response()->json([
                     'status' => 401,
                     'success' => false,
@@ -25,6 +25,12 @@ class CustomerDataController extends Controller
             
             $customerProcess = Customer::orderBy('name');
 
+            // if($request->skip){
+            //     $customerProcess->skip($request->skip);
+            // }
+            if($request->take){
+                $customerProcess->take($request->take);
+            }
             if($request->search){
                 $customerProcess->where('name', 'like', '%'.$request->search.'%')->orWhere('phone_number', 'like', '%'.$request->search.'%');
             }
@@ -33,7 +39,7 @@ class CustomerDataController extends Controller
                 'status' => 200,
                 'success' => true,
                 'message' => 'Data Pelanggan telah Berhasil Didapat',
-                'data' => $customerProcess->get(),
+                'data' => $customerProcess->get()->skip(3),
             ], 200);
         } catch(QueryException $error){
             return response()->json([
