@@ -20,7 +20,7 @@ class TransactionController extends Controller
 {
     public function fetch(Request $request){
         try{
-            if ($request->except([ 'status', 'search', 'latest'])) {
+            if ($request->except(['limit', 'status', 'search', 'latest'])) {
                 return response()->json([
                     'status' => 401,
                     'success' => false,
