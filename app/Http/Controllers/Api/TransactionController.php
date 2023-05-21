@@ -20,7 +20,7 @@ class TransactionController extends Controller
 {
     public function fetch(Request $request){
         try{
-            if ($request->except(['limit', 'status', 'search', 'latest'])) {
+            if ($request->except(['skip', 'take', 'status', 'search', 'latest'])) {
                 return response()->json([
                     'status' => 401,
                     'success' => false,
@@ -30,9 +30,6 @@ class TransactionController extends Controller
 
             $transaction = Transaction::with('transaction_items.packages', 'customers', 'created_by', 'updated_by');
             
-            if($request->limit){
-                $transaction->limit($request->limit);
-            }
             if($request->status){
                 $transaction->where('status', $request->status);
             }
@@ -50,7 +47,7 @@ class TransactionController extends Controller
                 'status' => 200,
                 'success' => true,
                 'message' => 'Data Transaksi telah Berhasil Didapat',
-                'data' => $transaction->get(),
+                'data' => $transaction->get()->skip($request->skip)->take($request->take)->values(),
             ], 200);
         } catch(QueryException $error){
             return response()->json([

@@ -15,7 +15,7 @@ class CustomerDataController extends Controller
 {
     public function fetch(Request $request){
         try{
-            if ($request->except([ 'search'])) {
+            if ($request->except(['skip', 'take', 'search'])) {
                 return response()->json([
                     'status' => 401,
                     'success' => false,
@@ -33,7 +33,7 @@ class CustomerDataController extends Controller
                 'status' => 200,
                 'success' => true,
                 'message' => 'Data Pelanggan telah Berhasil Didapat',
-                'data' => $customerProcess->get(),
+                'data' => $customerProcess->get()->skip($request->skip)->take($request->take)->values(),
             ], 200);
         } catch(QueryException $error){
             return response()->json([
