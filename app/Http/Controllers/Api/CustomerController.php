@@ -20,11 +20,11 @@ class CustomerController extends Controller
                 ], 401);
             }
 
-            $customerProcess = Customer::orderBy('name');
+            $customerProcess = Customer::orderBy('name')->where('name', 'like', '%'.$request->search.'%')->orWhere('phone_number', 'like', '%'.$request->search.'%');
 
-            if($request->search){
-                $customerProcess->where('name', 'like', '%'.$request->search.'%')->orWhere('phone_number', 'like', '%'.$request->search.'%');
-            }
+            // if($request->search){
+            //     $customerProcess->where('name', 'like', '%'.$request->search.'%')->orWhere('phone_number', 'like', '%'.$request->search.'%');
+            // }
 
             return response()->json([
                 'status' => 200,
