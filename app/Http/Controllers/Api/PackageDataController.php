@@ -15,7 +15,7 @@ class PackageDataController extends Controller
 {
     public function fetch(Request $request){
         try{
-            if ($request->except(['skip', 'take', 'search'])) {
+            if ($request->except(['search'])) {
                 return response()->json([
                     'status' => 401,
                     'success' => false,
@@ -33,7 +33,7 @@ class PackageDataController extends Controller
                 'status' => 200,
                 'success' => true,
                 'message' => 'Data Paket telah Berhasil Didapat',
-                'data' => $packageProcess->get()->skip($request->skip)->take($request->take)->values(),
+                'data' => $packageProcess->get(),
             ], 200);
         } catch(QueryException $error){
             return response()->json([
