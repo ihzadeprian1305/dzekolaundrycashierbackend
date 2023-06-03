@@ -37,7 +37,7 @@ class TransactionController extends Controller
                 $transaction->where('status', $request->status);
             }
             if($request->search){
-                $transaction->whereUuid('%'.$request->search.'%')->orWhereRelation('customers', 'name', 'like', '%'.$request->search.'%')->orWhereRelation('customers', 'phone_number', 'like', '%'.$request->search.'%');
+                $transaction->whereUuid('id', '%'.$request->search.'%')->orWhereRelation('customers', 'name', 'like', '%'.$request->search.'%')->orWhereRelation('customers', 'phone_number', 'like', '%'.$request->search.'%');
             }
             
             if($request->latest == 'true'){
