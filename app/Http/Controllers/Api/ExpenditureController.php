@@ -25,7 +25,7 @@ class ExpenditureController extends Controller
             $transaction = Expenditure::with('expenditure_items.stuffs', 'created_by', 'updated_by');
             
             if($request->search){
-                $transaction->where('information', 'like', '%'.$request->search.'%');
+                $transaction->where('id', '%'.$request->search.'%')->where('information', 'like', '%'.$request->search.'%');
             }
 
             return response()->json([
