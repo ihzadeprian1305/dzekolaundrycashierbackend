@@ -22,17 +22,17 @@ class ExpenditureController extends Controller
                 ], 401);
             }
 
-            $transaction = Expenditure::with('expenditure_items.stuffs', 'created_by', 'updated_by');
+            $expenditure = Expenditure::with('expenditure_items.stuffs', 'created_by', 'updated_by');
             
             if($request->search){
-                $transaction->where('information', 'like', '%'.$request->search.'%');
+                $expenditure->where('id', 'like', '%'.$request->search.'%')->orWhere('information', 'like', '%'.$request->search.'%');
             }
 
             return response()->json([
                 'status' => 200,
                 'success' => true,
                 'message' => 'Data Pengeluaran telah Berhasil Didapat',
-                'data' => $transaction->latest()->get(),
+                'data' => $expenditure->latest()->get(),
             ], 200);
         } catch(QueryException $error){
             return response()->json([
@@ -51,7 +51,7 @@ class ExpenditureController extends Controller
     
     public function post(Request $request){
         try{
-        // if ($request->except(['transaction_items', 'transaction_items.*.id', 'total_price', 'status'])) {
+        // if ($request->except(['expenditure_items', 'expenditure_items.*.id', 'total_price', 'status'])) {
         //     return response()->json([
         //         'status' => 401,
         //         'success' => false,
