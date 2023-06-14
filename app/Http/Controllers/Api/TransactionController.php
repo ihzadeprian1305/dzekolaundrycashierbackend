@@ -296,7 +296,7 @@ class TransactionController extends Controller
 
             $midtrans = [
                 'transaction_details' => [
-                    'order_id' => $transactionData->id,
+                    'order_id' => $transactionData->customers->phone_number.'-'.$now,
                     'gross_amount' => $transactionData->total_price,
                     'payment_link_id' => 'pembayarandzekolaundry-'.$now,
                 ],
@@ -322,30 +322,32 @@ class TransactionController extends Controller
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Basic '.$authorization,
             ])->post('https://api.sandbox.midtrans.com/v1/payment-links', $midtrans);
-            
-            if($response->status() == 409){
-                $responseDelete = Http::withHeaders([
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Basic '.$authorization,
-                ])->delete('https://api.sandbox.midtrans.com/v1/payment-links/'.$request->id);
 
-                $responseDeleteJSON = json_decode($responseDelete->body());
+            // dd($response->body());
 
-                if(!$responseDelete->status() == 200){
-                    return response()->json([
-                        'status' => 401,
-                        'success' => false,
-                        'message' => $responseDeleteJSON->error_messages[0],
-                    ], 401);
-                }
+            // if($response->status() == 409){
+            //     $responseDelete = Http::withHeaders([
+            //         'Accept' => 'application/json',
+            //         'Content-Type' => 'application/json',
+            //         'Authorization' => 'Basic '.$authorization,
+            //     ])->delete('https://api.sandbox.midtrans.com/v1/payment-links/'.$request->id);
 
-                $response = Http::withHeaders([
-                    'Accept' => 'application/json',
-                    'Content-Type' => 'application/json',
-                    'Authorization' => 'Basic '.$authorization,
-                ])->post('https://api.sandbox.midtrans.com/v1/payment-links', $midtrans);
-            }
+            //     $responseDeleteJSON = json_decode($responseDelete->body());
+
+            //     if(!$responseDelete->status() == 200){
+            //         return response()->json([
+            //             'status' => 401,
+            //             'success' => false,
+            //             'message' => $responseDeleteJSON->error_messages[0],
+            //         ], 401);
+            //     }
+
+            //     $response = Http::withHeaders([
+            //         'Accept' => 'application/json',
+            //         'Content-Type' => 'application/json',
+            //         'Authorization' => 'Basic '.$authorization,
+            //     ])->post('https://api.sandbox.midtrans.com/v1/payment-links', $midtrans);
+            // }
 
             $responseJSON = json_decode($response->body());
             
