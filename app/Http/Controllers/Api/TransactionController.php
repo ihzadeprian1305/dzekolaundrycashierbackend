@@ -298,7 +298,7 @@ class TransactionController extends Controller
                 'transaction_details' => [
                     'order_id' => $transactionData->id,
                     'gross_amount' => $transactionData->total_price,
-                    'payment_link_id' => 'pembayarandzekolaundry-'.$now.'-'.$transactionData->id,
+                    'payment_link_id' => 'pembayarandzekolaundry-'.$now.'-'.$transactionData->customers->phone_number,
                 ],
                 'usage_limit' =>  1,
                 'enabled_payments' => [
