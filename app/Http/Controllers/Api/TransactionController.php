@@ -199,7 +199,6 @@ class TransactionController extends Controller
             $validatedData = Validator::make($request->all(), [
                 'id' => 'required',
             ]);
-
             
             if ($validatedData->fails()) {
                 return response()->json([
@@ -209,28 +208,28 @@ class TransactionController extends Controller
                 ], 401);
             }
 
-            Config::$serverKey = config('services.midtrans.server_key');
-            Config::$isProduction = config('services.midtrans.is_production');
-            Config::$isSanitized = config('services.midtrans.is_sanitized');
-            Config::$is3ds = config('services.midtrans.is_3ds');
+            // Config::$serverKey = config('services.midtrans.server_key');
+            // Config::$isProduction = config('services.midtrans.is_production');
+            // Config::$isSanitized = config('services.midtrans.is_sanitized');
+            // Config::$is3ds = config('services.midtrans.is_3ds');
 
-            $authorization = base64_encode(Config::$serverKey.':');
+            // $authorization = base64_encode(Config::$serverKey.':');
 
-            $responseDelete = Http::withHeaders([
-                'Accept' => 'application/json',
-                'Content-Type' => 'application/json',
-                'Authorization' => 'Basic '.$authorization,
-            ])->delete('https://api.sandbox.midtrans.com/v1/payment-links/'.$request->id);
+            // $responseDelete = Http::withHeaders([
+            //     'Accept' => 'application/json',
+            //     'Content-Type' => 'application/json',
+            //     'Authorization' => 'Basic '.$authorization,
+            // ])->delete('https://api.sandbox.midtrans.com/v1/payment-links/'.$request->id);
 
-            $responseDeleteJSON = json_decode($responseDelete->body());
+            // $responseDeleteJSON = json_decode($responseDelete->body());
 
-            if(!$responseDelete->status() == 200 || !$responseDelete->status() == 404){
-                return response()->json([
-                    'status' => 401,
-                    'success' => false,
-                    'message' => $responseDeleteJSON->error_messages[0],
-                ], 401);
-            }
+            // if(!$responseDelete->status() == 200 || !$responseDelete->status() == 404){
+            //     return response()->json([
+            //         'status' => 401,
+            //         'success' => false,
+            //         'message' => $responseDeleteJSON->error_messages[0],
+            //     ], 401);
+            // }
 
             Transaction::where('id', $request->id)->update([
                 'status' => 3,
@@ -296,7 +295,7 @@ class TransactionController extends Controller
 
             $midtrans = [
                 'transaction_details' => [
-                    'order_id' => $transactionData->customers->phone_number.'-'.$now,
+                    'order_id' => $transactionData->id,
                     'gross_amount' => $transactionData->total_price,
                     'payment_link_id' => 'pembayarandzekolaundry-'.$now,
                 ],
@@ -322,9 +321,7 @@ class TransactionController extends Controller
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Basic '.$authorization,
             ])->post('https://api.sandbox.midtrans.com/v1/payment-links', $midtrans);
-
-            // dd($response->body());
-
+            
             // if($response->status() == 409){
             //     $responseDelete = Http::withHeaders([
             //         'Accept' => 'application/json',
@@ -406,7 +403,6 @@ class TransactionController extends Controller
                 'id' => 'required',
             ]);
 
-            
             if ($validatedData->fails()) {
                 return response()->json([
                     'status' => 401,
